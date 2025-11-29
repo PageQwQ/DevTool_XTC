@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Symbols>
+    <Category class="1" column="4" comment="数字" lock="true" name="数字">
+        <Symbol text="这里是数字专栏～" />
+        <Symbol text="1" />
+        <Symbol text="2" />
+        <Symbol text="3" />
+        <Symbol text="4" />
+        <Symbol text="5" />
+        <Symbol text="6" />
+        <Symbol text="7" />
+        <Symbol text="8" />
+        <Symbol text="9" />
+        <Symbol text="0" />
+        <Symbol text="" />
+        <Symbol text="" />
+    </Category>
+    <Category class="1" column="4" comment="符号" lock="true" name="符号">
+        <Symbol text="这里是符号专栏～" />
+        <Symbol text="，" />
+        <Symbol text="。" />
+        <Symbol text="？" />
+        <Symbol text="！" />
+        <Symbol text="：" />
+        <Symbol text="；" />
+        <Symbol text="、" />
+        <Symbol text="——" />
+        <Symbol text="“" />
+        <Symbol text="”" />
+        <Symbol text="‘" />
+        <Symbol text="’" />
+        <Symbol text="（" />
+        <Symbol text="）" />
+        <Symbol text="《" />
+        <Symbol text="》" />
+        <Symbol text="……" />
+        <Symbol text="～" />
+        <Symbol text="【" />
+        <Symbol text="】" />
+        <Symbol text="," />
+        <Symbol text="." />
+        <Symbol text="\?" />
+        <Symbol text="!" />
+        <Symbol text=":" />
+        <Symbol text=";" />
+        <Symbol text="\@" />
+        <Symbol text=".com" />
+        <Symbol text="*" />
+        <Symbol text="_" />
+        <Symbol text="+" />
+        <Symbol text="-" />
+        <Symbol text="=" />
+        <Symbol text="/" />
+        <Symbol text="\\" />
+        <Symbol text="%" />
+        <Symbol text="\#" />
+        <Symbol text="~" />
+        <Symbol text="'" />
+        <Symbol right="&quot;" text="&quot;" />
+        <Symbol right=">" text="&lt;" />
+        <Symbol left="&lt;" text=">" />
+        <Symbol text="(" />
+        <Symbol text=")" />
+        <Symbol text="[" />
+        <Symbol text="]" />
+        <Symbol text="{" />
+        <Symbol text="}" />
+        <Symbol text="^" />
+        <Symbol text="|" />
+        <Symbol text="&amp;" />
+        <Symbol text="" />
+    </Category>
+    <Category class="1" column="4" comment="abc" lock="true" name="abc">
+        <Symbol text="这里是小写字母专栏～" />
+        <Symbol text="a" />
+        <Symbol text="b" />
+        <Symbol text="c" />
+        <Symbol text="d" />
+        <Symbol text="e" />
+        <Symbol text="f" />
+        <Symbol text="g" />
+        <Symbol text="h" />
+        <Symbol text="i" />
+        <Symbol text="j" />
+        <Symbol text="k" />
+        <Symbol text="l" />
+        <Symbol text="m" />
+        <Symbol text="n" />
+        <Symbol text="o" />
+        <Symbol text="p" />
+        <Symbol text="q" />
+        <Symbol text="r" />
+        <Symbol text="s" />
+        <Symbol text="t" />
+        <Symbol text="u" />
+        <Symbol text="v" />
+        <Symbol text="w" />
+        <Symbol text="x" />
+        <Symbol text="y" />
+        <Symbol text="z" />
+        <Symbol text="" />
+        <Symbol text="" />
+    </Category>
+    <Category class="1" column="4" comment="ABC" lock="true" name="ABC">
+        <Symbol text="这里是大写字母专栏～" />
+        <Symbol text="A" />
+        <Symbol text="B" />
+        <Symbol text="C" />
+        <Symbol text="D" />
+        <Symbol text="E" />
+        <Symbol text="F" />
+        <Symbol text="G" />
+        <Symbol text="H" />
+        <Symbol text="I" />
+        <Symbol text="J" />
+        <Symbol text="K" />
+        <Symbol text="L" />
+        <Symbol text="M" />
+        <Symbol text="N" />
+        <Symbol text="O" />
+        <Symbol text="P" />
+        <Symbol text="Q" />
+        <Symbol text="R" />
+        <Symbol text="S" />
+        <Symbol text="T" />
+        <Symbol text="U" />
+        <Symbol text="V" />
+        <Symbol text="W" />
+        <Symbol text="X" />
+        <Symbol text="Y" />
+        <Symbol text="Z" />
+        <Symbol text="" />
+        <Symbol text="" />
+    </Category>
+    <Category class="1" column="4" comment="特殊符号" lock="true" name="特殊符号">
+        <Symbol text="这里是特殊符号专栏～" />
+        <Symbol text="m³" />
+        <Symbol text="△" />
+        <Symbol text="‱" />
+        <Symbol text="≌" />
+        <Symbol text="♂" />
+        <Symbol text="♀" />
+        <Symbol text="∵" />
+        <Symbol text="∴" />
+        <Symbol text="½" />
+        <Symbol text="¼" />
+        <Symbol text="¹" />
+        <Symbol text="♪" />
+        <Symbol text="²" />
+        <Symbol text="³" />
+        <Symbol text="♠" />
+        <Symbol text="♣" />
+        <Symbol text="♥" />
+        <Symbol text="♦" />
+        <Symbol text="^_^" />
+        <Symbol text="卐" />
+        <Symbol text="★" />
+        <Symbol text="♟" />
+        <Symbol text="☆" />
+        <Symbol text="↖" />
+        <Symbol text="の" />
+        <Symbol text="√" />
+        <Symbol text="" />
+        <Symbol text="" />
+    </Category>
+    <Category class="1" column="4" comment="日语" lock="true" name="日语">
+        <Symbol text="这里是日语专栏～" />
+        <Symbol text="メ" />
+        <Symbol text="ゅ" />
+        <Symbol text="ジ" />
+        <Symbol text="ざ" />
+        <Symbol text="づ" />
+        <Symbol text="ビ" />
+        <Symbol text="ね" />
+        <Symbol text="ミ" />
+        <Symbol text="む" />
+        <Symbol text="ギ" />
+        <Symbol text="そ" />
+        <Symbol text="な" />
+        <Symbol text="バ" />
+        <Symbol text="ぽ" />
+        <Symbol text="ガ" />
+        <Symbol text="ザ" />
+        <Symbol text="" />
+        <Symbol text="" />
+    </Category>
+    <Category class="1" column="4" comment="emoji" lock="true" name="emoji">
+        <Symbol text="补充更多emoji～" />
+        <Symbol text="🧐" />
+        <Symbol text="🤓" />
+        <Symbol text="🤔" />
+        <Symbol text="🤯" />
+        <Symbol text="😘" />
+        <Symbol text="🤗" />
+        <Symbol text="😎" />
+        <Symbol text="😋" />
+        <Symbol text="🤡" />
+        <Symbol text="🤬" />
+        <Symbol text="" />
+        <Symbol text="" />
+    </Category>
+</Symbols>

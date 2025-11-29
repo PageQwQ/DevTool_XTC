@@ -6,16 +6,30 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ContentView: View {
+    @StateObject private var vm = KeyboardViewModel()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if vm.categories.isEmpty {
+                OnboardingView(vm: vm)
+            } else {
+                HStack(spacing: 0) {
+                    KeyboardPreviewView(vm: vm)
+                        .frame(minWidth: 320)
+                        .padding()
+                    Divider()
+                    RightPaneView(vm: vm)
+                        .frame(minWidth: 320)
+                        .padding()
+                }
+            }
         }
-        .padding()
+        .onAppear {
+            vm.loadLastBookmarkIfAvailable()
+        }
     }
 }
 
