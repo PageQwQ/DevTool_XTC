@@ -6,10 +6,19 @@ final class XMLSymbolParser: NSObject, XMLParserDelegate {
     private var currentSymbols: [SymbolItem] = []
 
     func parse(url: URL) throws -> [SymbolCategory] {
+        categories = []
+        currentAttrs = [:]
+        currentSymbols = []
         let data = try Data(contentsOf: url)
         let parser = XMLParser(data: data)
         parser.delegate = self
-        parser.parse()
+        let ok = parser.parse()
+        if !ok {
+            throw parser.parserError ?? NSError(domain: "XMLSymbolParser", code: -1, userInfo: [NSLocalizedDescriptionKey: "XML 解析失败"])
+        }
+        if categories.isEmpty {
+            throw NSError(domain: "XMLSymbolParser", code: 1, userInfo: [NSLocalizedDescriptionKey: "未解析到任何分栏（检查 <Symbols>/<Category> 结构）"])
+        }
         return categories
     }
 

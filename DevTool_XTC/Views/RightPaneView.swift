@@ -14,7 +14,13 @@ struct RightPaneView: View {
             }
             .padding(.horizontal, 8)
             if let err = vm.parseError {
-                Text(err).foregroundStyle(.red)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("解析错误")
+                        .font(.headline)
+                    Text(err)
+                }
+                .padding(8)
+                .background(RoundedRectangle(cornerRadius: 8).stroke(Color.red, lineWidth: 1))
             }
             TextEditor(text: $vm.text)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

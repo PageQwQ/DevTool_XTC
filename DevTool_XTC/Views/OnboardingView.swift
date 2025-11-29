@@ -15,10 +15,18 @@ struct OnboardingView: View {
                     if let url = Bundle.main.url(forResource: "symbol", withExtension: "xml") {
                         vm.importXML(url: url)
                     } else {
-                        let url = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("symbol.xml")
-                        vm.importXML(url: url)
+                        vm.parseError = "未找到示例 XML，请使用‘选择文件’导入。"
                     }
                 }
+            }
+            if let err = vm.parseError {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("导入错误")
+                        .font(.headline)
+                    Text(err)
+                }
+                .padding(8)
+                .background(RoundedRectangle(cornerRadius: 8).stroke(Color.red, lineWidth: 1))
             }
         }
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [UTType.xml]) { res in

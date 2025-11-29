@@ -18,6 +18,9 @@ final class KeyboardViewModel: ObservableObject {
     private var repeatingItem: SymbolItem?
 
     func importXML(url: URL) {
+        var didAccess = false
+        if url.startAccessingSecurityScopedResource() { didAccess = true }
+        defer { if didAccess { url.stopAccessingSecurityScopedResource() } }
         do {
             let cats = try parser.parse(url: url)
             categories = cats
@@ -25,6 +28,7 @@ final class KeyboardViewModel: ObservableObject {
             parseError = nil
             saveBookmark(url)
         } catch {
+            categories = []
             parseError = error.localizedDescription
         }
     }
