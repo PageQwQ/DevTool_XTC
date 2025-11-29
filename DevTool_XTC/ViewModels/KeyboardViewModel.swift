@@ -11,7 +11,7 @@ final class KeyboardViewModel: ObservableObject {
     @Published var parseError: String?
     @Published var pairModeEnabled: Bool = true
     @Published var repeatEnabled: Bool = true
-    @Published var stats: [String: Int] = [:]
+    @Published var xmlSource: String = ""
 
     private let parser = XMLSymbolParser()
     private var repeatTimer: Timer?
@@ -22,6 +22,8 @@ final class KeyboardViewModel: ObservableObject {
         if url.startAccessingSecurityScopedResource() { didAccess = true }
         defer { if didAccess { url.stopAccessingSecurityScopedResource() } }
         do {
+            let data = try Data(contentsOf: url)
+            xmlSource = String(data: data, encoding: .utf8) ?? String(decoding: data, as: UTF8.self)
             let cats = try parser.parse(url: url)
             categories = cats
             importedURL = url
@@ -34,17 +36,16 @@ final class KeyboardViewModel: ObservableObject {
     }
 
     func insert(_ item: SymbolItem) {
-        if item.text.isEmpty { return }
+        var display = item.text
+        if display.hasPrefix("\\") { display.removeFirst() }
+        if display.isEmpty { return }
         if pairModeEnabled, let l = item.left, let r = item.right {
             text.append(l)
             text.append(r)
         } else {
-            text.append(item.text)
+            text.append(display)
         }
-        let k = item.key ?? item.text
-        if !k.isEmpty {
-            stats[k, default: 0] += 1
-        }
+        
     }
 
     func backspace() {

@@ -17,26 +17,41 @@ struct KeyboardPreviewView: View {
                 }
                 .padding(.horizontal, 8)
             }
-            if let comment = currentCategory?.comment, !comment.isEmpty {
-                Text(comment)
-                    .lineLimit(1)
-                    .font(.headline)
+            if let cat = currentCategory, let first = cat.symbols.first {
+                let header = first.text.hasPrefix("\\") ? String(first.text.dropFirst()) : first.text
+                if !header.isEmpty {
+                    HStack(spacing: 8) {
+                        Image(systemName: "text.quote")
+                        Text(header)
+                            .lineLimit(2)
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.12)))
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray.opacity(0.25)))
+                    .padding(.horizontal, 8)
+                }
             }
             if let cat = currentCategory {
                 let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: max(1, cat.column))
+                let visible = Array(cat.symbols.dropFirst())
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 8) {
-                        ForEach(cat.symbols) { item in
+                        ForEach(visible) { item in
+                            let display = item.text.hasPrefix("\\") ? String(item.text.dropFirst()) : item.text
+                            let isWide = display.count > 5
                             ZStack {
-                                RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(item.text.isEmpty ? 0.05 : 0.2))
-                                Text(item.text)
-                                    .font(.title3)
-                                    .foregroundStyle(item.text.isEmpty ? .clear : .primary)
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.gray.opacity(display.isEmpty ? 0.05 : (isWide ? 0.25 : 0.2)))
+                                Text(display)
+                                    .font(isWide ? .headline : .title3)
+                                    .foregroundStyle(display.isEmpty ? .clear : .primary)
                             }
                             .frame(minWidth: 44, minHeight: 44)
-                            .onTapGesture {
-                                vm.insert(item)
-                            }
+                            .gridCellColumns(isWide ? min(4, max(1, cat.column)) : 1)
+                            .onTapGesture { vm.insert(item) }
                             .onLongPressGesture(minimumDuration: 0.3, pressing: { pressing in
                                 if pressing {
                                     if item.left != nil || item.right != nil {
@@ -60,12 +75,7 @@ struct KeyboardPreviewView: View {
             } else {
                 Text("未选择分栏")
             }
-            HStack {
-                Button("⌫") { vm.backspace() }
-                Spacer()
-                Button("发送") {}
-            }
-            .padding(.horizontal, 8)
+            
         }
         .overlay(alignment: .center) {
             if let item = popoverItem {

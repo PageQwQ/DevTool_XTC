@@ -22,16 +22,15 @@ struct RightPaneView: View {
                 .padding(8)
                 .background(RoundedRectangle(cornerRadius: 8).stroke(Color.red, lineWidth: 1))
             }
-            TextEditor(text: $vm.text)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .border(Color.gray.opacity(0.2))
-            VStack(alignment: .leading) {
-                Text("统计")
-                ForEach(vm.stats.keys.sorted(), id: \.self) { k in
-                    HStack { Text(k); Spacer(); Text(String(vm.stats[k] ?? 0)) }
-                }
+            ScrollView {
+                Text(vm.xmlSource.isEmpty ? "未加载 XML 源代码" : vm.xmlSource)
+                    .font(.system(.body, design: .monospaced))
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.horizontal, 8)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .border(Color.gray.opacity(0.2))
+            
         }
     }
 }
