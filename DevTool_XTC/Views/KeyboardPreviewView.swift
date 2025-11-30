@@ -1,12 +1,12 @@
 import SwiftUI
-import AppKit
+ 
 
 struct KeyboardPreviewView: View {
     @ObservedObject var vm: KeyboardViewModel
     @State private var popoverItem: SymbolItem?
     @State private var newSymbolText: String = ""
     @State private var showAddSheet: Bool = false
-    @State private var eventMonitor: Any?
+    
     @State private var editingItem: SymbolItem?
     @State private var selectedId: UUID?
 
@@ -96,7 +96,16 @@ struct KeyboardPreviewView: View {
             } else {
                 Text("未选择分栏")
             }
-            
+            HStack {
+                Button("新增") {
+                    editingItem = nil
+                    newSymbolText = ""
+                    showAddSheet = true
+                }
+                Spacer()
+            }
+            .padding(.horizontal, 8)
+            .padding(.bottom, 6)
         }
         .overlay(alignment: .center) {
             if let item = popoverItem {
@@ -142,19 +151,7 @@ struct KeyboardPreviewView: View {
             .padding(16)
             .frame(minWidth: 300)
         }
-        .onAppear {
-            eventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { event in
-                if event.keyCode == 36 || event.keyCode == 76 { // Return 或 Keypad Enter
-                    showAddSheet = true
-                    return nil
-                }
-                return event
-            }
-        }
-        .onDisappear {
-            if let monitor = eventMonitor { NSEvent.removeMonitor(monitor) }
-            eventMonitor = nil
-        }
+        
     }
 
     private var currentCategory: SymbolCategory? {

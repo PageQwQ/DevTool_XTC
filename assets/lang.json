@@ -1,0 +1,38 @@
+{
+  "default": "zh-CN",
+  "languages": ["zh-CN", "en"],
+  "strings": {
+    "zh-CN": {
+      "tab_add": "新增",
+      "save": "保存",
+      "save_as": "另存为",
+      "pair_mode": "成对插入",
+      "repeat_mode": "长按连击",
+      "parse_error_title": "解析错误",
+      "import_error_title": "导入错误",
+      "xml_not_loaded": "未加载 XML 源代码",
+      "no_category_selected": "未选择分栏",
+      "new_symbol_title": "新增符号",
+      "edit_symbol_title": "修改符号",
+      "input_placeholder": "输入要添加的符号",
+      "cancel": "取消",
+      "confirm_add": "添加"
+    },
+    "en": {
+      "tab_add": "Add",
+      "save": "Save",
+      "save_as": "Save As",
+      "pair_mode": "Pair Insert",
+      "repeat_mode": "Repeat on Hold",
+      "parse_error_title": "Parse Error",
+      "import_error_title": "Import Error",
+      "xml_not_loaded": "XML not loaded",
+      "no_category_selected": "No category selected",
+      "new_symbol_title": "New Symbol",
+      "edit_symbol_title": "Edit Symbol",
+      "input_placeholder": "Enter symbol to add",
+      "cancel": "Cancel",
+      "confirm_add": "Add"
+    }
+  }
+}
