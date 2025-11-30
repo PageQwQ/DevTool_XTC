@@ -1,22 +1,24 @@
 import SwiftUI
+import AppKit
 
 struct KeyboardPreviewView: View {
     @ObservedObject var vm: KeyboardViewModel
     @State private var popoverItem: SymbolItem?
+    @State private var newSymbolText: String = ""
+    @State private var showAddSheet: Bool = false
+    @State private var eventMonitor: Any?
+    @State private var editingItem: SymbolItem?
+    @State private var selectedId: UUID?
 
     var body: some View {
         VStack(spacing: 8) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(Array(vm.categories.enumerated()), id: \.offset) { idx, cat in
-                        Button(cat.name.isEmpty ? "无名" : cat.name) {
-                            vm.currentIndex = idx
-                        }
-                        .foregroundStyle(vm.currentIndex == idx ? .primary : .secondary)
-                    }
+            Picker("", selection: $vm.currentIndex) {
+                ForEach(Array(vm.categories.enumerated()), id: \.offset) { idx, cat in
+                    Text(tabTitle(cat)).tag(idx)
                 }
-                .padding(.horizontal, 8)
             }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 8)
             if let cat = currentCategory, let first = cat.symbols.first {
                 let header = first.text.hasPrefix("\\") ? String(first.text.dropFirst()) : first.text
                 if !header.isEmpty {
@@ -50,8 +52,26 @@ struct KeyboardPreviewView: View {
                                     .foregroundStyle(display.isEmpty ? .clear : .primary)
                             }
                             .frame(minWidth: 44, minHeight: 44)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(selectedId == item.id ? Color.blue : Color.clear, lineWidth: 2)
+                                    .animation(nil, value: selectedId)
+                            )
                             .gridCellColumns(isWide ? min(4, max(1, cat.column)) : 1)
-                            .onTapGesture { vm.insert(item) }
+                            .highPriorityGesture(
+                                TapGesture(count: 2).onEnded {
+                                    editingItem = item
+                                    let display = item.text.hasPrefix("\\") ? String(item.text.dropFirst()) : item.text
+                                    newSymbolText = display
+                                    showAddSheet = true
+                                }
+                            )
+                            .gesture(
+                                TapGesture().onEnded {
+                                    selectedId = item.id
+                                    DispatchQueue.main.async { vm.insert(item) }
+                                }
+                            )
                             .onLongPressGesture(minimumDuration: 0.3, pressing: { pressing in
                                 if pressing {
                                     if item.left != nil || item.right != nil {
@@ -71,6 +91,7 @@ struct KeyboardPreviewView: View {
                         }
                     }
                     .padding(.horizontal, 8)
+                    .padding(.top, 3)
                 }
             } else {
                 Text("未选择分栏")
@@ -93,10 +114,56 @@ struct KeyboardPreviewView: View {
                 }
             }
         }
+        .sheet(isPresented: $showAddSheet) {
+            VStack(spacing: 12) {
+                Text(editingItem == nil ? "新增符号" : "修改符号")
+                    .font(.headline)
+                TextField("输入要添加的符号", text: $newSymbolText)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 260)
+                    .onSubmit {
+                        if let e = editingItem { vm.updateSymbol(id: e.id, text: newSymbolText) } else { vm.addSymbol(text: newSymbolText) }
+                        newSymbolText = ""
+                        showAddSheet = false
+                        editingItem = nil
+                    }
+                HStack {
+                    Button("取消") { showAddSheet = false }
+                    Spacer()
+                    Button("添加") {
+                        if let e = editingItem { vm.updateSymbol(id: e.id, text: newSymbolText) } else { vm.addSymbol(text: newSymbolText) }
+                        newSymbolText = ""
+                        showAddSheet = false
+                        editingItem = nil
+                    }
+                }
+                .frame(width: 260)
+            }
+            .padding(16)
+            .frame(minWidth: 300)
+        }
+        .onAppear {
+            eventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { event in
+                if event.keyCode == 36 || event.keyCode == 76 { // Return 或 Keypad Enter
+                    showAddSheet = true
+                    return nil
+                }
+                return event
+            }
+        }
+        .onDisappear {
+            if let monitor = eventMonitor { NSEvent.removeMonitor(monitor) }
+            eventMonitor = nil
+        }
     }
 
     private var currentCategory: SymbolCategory? {
         guard vm.categories.indices.contains(vm.currentIndex) else { return nil }
         return vm.categories[vm.currentIndex]
+    }
+
+    private func tabTitle(_ cat: SymbolCategory) -> String {
+        let title = (cat.comment?.isEmpty == false ? cat.comment! : cat.name)
+        return title.isEmpty ? "无名" : title
     }
 }

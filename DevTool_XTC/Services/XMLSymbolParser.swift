@@ -50,4 +50,41 @@ final class XMLSymbolParser: NSObject, XMLParserDelegate {
             currentSymbols = []
         }
     }
+
+    static func serialize(_ categories: [SymbolCategory]) -> String {
+        var out: [String] = []
+        out.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>")
+        out.append("<Symbols>")
+        for cat in categories {
+            var attrs: [String] = []
+            attrs.append("class=\"1\"")
+            attrs.append("column=\"\(cat.column)\"")
+            if let c = cat.comment { attrs.append("comment=\"\(escape(c))\"") }
+            attrs.append("lock=\"\(cat.locked ? "true" : "false")\"")
+            attrs.append("name=\"\(escape(cat.name))\"")
+            out.append("    <Category \(attrs.joined(separator: " "))>")
+            for s in cat.symbols {
+                var sAttrs: [String] = []
+                sAttrs.append("text=\"\(escape(s.text))\"")
+                if let l = s.left { sAttrs.append("left=\"\(escape(l))\"") }
+                if let r = s.right { sAttrs.append("right=\"\(escape(r))\"") }
+                if let h = s.hint { sAttrs.append("hint=\"\(escape(h))\"") }
+                if s.repeatable { sAttrs.append("repeatable=\"true\"") }
+                if let k = s.key { sAttrs.append("key=\"\(escape(k))\"") }
+                out.append("        <Symbol \(sAttrs.joined(separator: " ")) />")
+            }
+            out.append("    </Category>")
+        }
+        out.append("</Symbols>")
+        return out.joined(separator: "\n")
+    }
+
+    private static func escape(_ s: String) -> String {
+        var r = s
+        r = r.replacingOccurrences(of: "&", with: "&amp;")
+        r = r.replacingOccurrences(of: "\"", with: "&quot;")
+        r = r.replacingOccurrences(of: "<", with: "&lt;")
+        r = r.replacingOccurrences(of: ">", with: "&gt;")
+        return r
+    }
 }

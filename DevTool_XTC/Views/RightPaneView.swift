@@ -1,4 +1,6 @@
 import SwiftUI
+import AppKit
+import UniformTypeIdentifiers
 
 struct RightPaneView: View {
     @ObservedObject var vm: KeyboardViewModel
@@ -9,6 +11,18 @@ struct RightPaneView: View {
                 Text(vm.importedURL?.lastPathComponent ?? "未导入文件")
                     .font(.headline)
                 Spacer()
+                Button("保存") { vm.saveXML() }
+                    .disabled(!(vm.importedURL != nil && vm.isDirty))
+                Button("另存为") {
+                    let panel = NSSavePanel()
+                    panel.nameFieldStringValue = vm.importedURL?.lastPathComponent ?? "symbol.xml"
+                    panel.allowedContentTypes = [UTType.xml]
+                    panel.begin { resp in
+                        if resp == .OK, let url = panel.url {
+                            vm.saveXML(to: url)
+                        }
+                    }
+                }
                 Toggle("成对插入", isOn: $vm.pairModeEnabled)
                 Toggle("长按连击", isOn: $vm.repeatEnabled)
             }

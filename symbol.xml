@@ -56,9 +56,9 @@
         <Symbol text="\#" />
         <Symbol text="~" />
         <Symbol text="'" />
-        <Symbol right="&quot;" text="&quot;" />
-        <Symbol right=">" text="&lt;" />
-        <Symbol left="&lt;" text=">" />
+        <Symbol text="&quot;" right="&quot;" />
+        <Symbol text="&lt;" right="&gt;" />
+        <Symbol text="&gt;" left="&lt;" />
         <Symbol text="(" />
         <Symbol text=")" />
         <Symbol text="[" />

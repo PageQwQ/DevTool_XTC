@@ -12,6 +12,7 @@ final class KeyboardViewModel: ObservableObject {
     @Published var pairModeEnabled: Bool = true
     @Published var repeatEnabled: Bool = true
     @Published var xmlSource: String = ""
+    @Published var isDirty: Bool = false
 
     private let parser = XMLSymbolParser()
     private var repeatTimer: Timer?
@@ -29,6 +30,7 @@ final class KeyboardViewModel: ObservableObject {
             importedURL = url
             parseError = nil
             saveBookmark(url)
+            isDirty = false
         } catch {
             categories = []
             parseError = error.localizedDescription
@@ -68,6 +70,89 @@ final class KeyboardViewModel: ObservableObject {
         repeatTimer = nil
         repeatingItem = nil
     }
+
+    func addSymbol(text: String) {
+        guard !text.isEmpty else { return }
+        guard categories.indices.contains(currentIndex) else { return }
+        let cat = categories[currentIndex]
+        var syms = cat.symbols
+        let newItem = SymbolItem(text: text, left: nil, right: nil, hint: nil, repeatable: false, key: nil)
+        let insertPos = (syms.lastIndex(where: { !$0.text.isEmpty }) ?? max(0, syms.count - 1)) + 1
+        syms.insert(newItem, at: min(insertPos, syms.count))
+        categories[currentIndex] = SymbolCategory(name: cat.name, comment: cat.comment, column: cat.column, locked: cat.locked, symbols: syms)
+        ensurePlaceholdersForCurrentCategory()
+        regenerateXML()
+        isDirty = true
+    }
+
+    func regenerateXML() {
+        xmlSource = XMLSymbolParser.serialize(categories)
+    }
+
+    func saveXML() {
+        guard let url = importedURL else { return }
+        var didAccess = false
+        if url.startAccessingSecurityScopedResource() { didAccess = true }
+        defer { if didAccess { url.stopAccessingSecurityScopedResource() } }
+        do {
+            regenerateXML()
+            let data = xmlSource.data(using: .utf8) ?? Data()
+            try data.write(to: url, options: .atomic)
+            isDirty = false
+            parseError = nil
+        } catch {
+            parseError = "保存失败: \(error.localizedDescription)"
+        }
+    }
+
+    func saveXML(to url: URL) {
+        var didAccess = false
+        if url.startAccessingSecurityScopedResource() { didAccess = true }
+        defer { if didAccess { url.stopAccessingSecurityScopedResource() } }
+        do {
+            regenerateXML()
+            let data = xmlSource.data(using: .utf8) ?? Data()
+            try data.write(to: url, options: .atomic)
+            importedURL = url
+            saveBookmark(url)
+            isDirty = false
+            parseError = nil
+        } catch {
+            parseError = "保存失败: \(error.localizedDescription)"
+        }
+    }
+
+    private func ensurePlaceholdersForCurrentCategory() {
+        guard categories.indices.contains(currentIndex) else { return }
+        let cat = categories[currentIndex]
+        let header = cat.symbols.first ?? SymbolItem(text: "", left: nil, right: nil, hint: nil, repeatable: false, key: nil)
+        let gridItems = Array(cat.symbols.dropFirst())
+        let nonEmpty = gridItems.filter { !$0.text.isEmpty }
+        let col = max(1, cat.column)
+        let remainder = nonEmpty.count % col
+        let need = remainder == 0 ? 0 : (col - remainder)
+        var newSyms: [SymbolItem] = [header]
+        newSyms.append(contentsOf: nonEmpty)
+        if need > 0 {
+            newSyms.append(contentsOf: Array(repeating: SymbolItem(text: "", left: nil, right: nil, hint: nil, repeatable: false, key: nil), count: need))
+        }
+        categories[currentIndex] = SymbolCategory(name: cat.name, comment: cat.comment, column: cat.column, locked: cat.locked, symbols: newSyms)
+    }
+
+    func updateSymbol(id: UUID, text: String) {
+        guard categories.indices.contains(currentIndex) else { return }
+        let cat = categories[currentIndex]
+        var syms = cat.symbols
+        if let idx = syms.firstIndex(where: { $0.id == id }) {
+            let old = syms[idx]
+            syms[idx] = SymbolItem(text: text, left: old.left, right: old.right, hint: old.hint, repeatable: old.repeatable, key: old.key)
+            categories[currentIndex] = SymbolCategory(name: cat.name, comment: cat.comment, column: cat.column, locked: cat.locked, symbols: syms)
+            ensurePlaceholdersForCurrentCategory()
+            regenerateXML()
+            isDirty = true
+        }
+    }
+
 
     func loadLastBookmarkIfAvailable() {
         guard let data = UserDefaults.standard.data(forKey: "lastXMLBookmark") else { return }
